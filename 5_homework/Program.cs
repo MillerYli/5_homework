@@ -180,6 +180,3 @@ class Program
     }
 }
 
-//int countpets, string[] name_pets,
-// DataUser.PetsCount, DataUser.NamePets,
-
