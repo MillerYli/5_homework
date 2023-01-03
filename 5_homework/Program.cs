@@ -7,103 +7,132 @@ class Program
     public static void Main(string[] args)
     {
         (string Name, string LastName, int Age, bool HasPets, int PetsCount, string[] NamePets, string[] Favcolor, int Countcolor) DataUser;
+
+        
         Console.Write("Введите ваше имя: ");
         DataUser.Name = Console.ReadLine();
         Console.Write("Введите вашу фамилию: ");
         DataUser.LastName = Console.ReadLine();
-       
+
         //Возраст
         string corr_age;
         int age_integer;
         do
         {
             Console.Write("Введите возраст цифрами: ");
-            corr_age= Console.ReadLine();
-        }while (CheckNum(corr_age, out age_integer));
+            corr_age = Console.ReadLine();
+        } while (CheckNum(corr_age, out age_integer));
 
         DataUser.Age = age_integer;
-        Console.Write("У вас есть питомец? ");
-        //Животные
-        string answer_pet = Console.ReadLine();
-        if (answer_pet == "Да")
-        {
-            DataUser.HasPets = true;
-            string corrcount_pet;
-            int pet_integer;
-            do
-            {
-                Console.Write("Введите кол-во ваших питомцев: ");
-                corrcount_pet= Console.ReadLine();
-            }
-            while(CheckNum(corrcount_pet,out pet_integer));
 
-            DataUser.PetsCount = pet_integer;
-            NickNamePats(pet_integer);
+        //Животные
+        DataUser.PetsCount = 0;
+        DataUser.HasPets = ChackHasPats();
+
+        if (DataUser.HasPets)
+        {
+            DataUser.PetsCount = EnterPetCount();
+            DataUser.NamePets = EnterPetsName(DataUser.PetsCount);
         }
         else
         {
-            DataUser.HasPets = false;
+            DataUser.NamePets = null;
         }
+      
+
         //Цвета
-        Console.WriteLine();
+        DataUser.Countcolor = EnterColorCount();
+        DataUser.Favcolor = EnterColorName(DataUser.Countcolor);
+        
+       
+
+        ShowDataUser(DataUser.Name, DataUser.LastName, DataUser.Age, DataUser.HasPets, DataUser.PetsCount, DataUser.NamePets, DataUser.Favcolor);
+
+    }
+    //Проверка на наличие животных
+    public static bool ChackHasPats()
+    {
+        Console.Write("У вас есть питомец? ");
+        string HasPets = Console.ReadLine();
+
+        if (HasPets == "Да")
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    //Кол-во животных
+    public static int EnterPetCount()
+    {
+        string corrcount_pet;
+        int pet_integer;
+        do
+        {
+            Console.Write("Введите кол-во ваших питомцев: ");
+            corrcount_pet = Console.ReadLine();
+        }
+        while (CheckNum(corrcount_pet, out pet_integer));
+
+        return Convert.ToInt32(corrcount_pet);
+    }
+
+    //Клички животных
+    public static string[] EnterPetsName(int count)
+    {
+        var result = new string[count];
+        Console.WriteLine("Введите клички ваших питомцев: ");
+        for (int i = 0; i < result.Length; i++)
+        {
+            Console.Write(i + 1 + ". ");
+            result[i] = Console.ReadLine();
+        }
+        return result;
+    }
+    //Кол-во цветов
+    public static int EnterColorCount()
+    {
         string corrcount_color;
         int color_integer;
         do
         {
             Console.Write("Введите кол-во ваших любимых цветов: ");
-            corrcount_color= Console.ReadLine();
+            corrcount_color = Console.ReadLine();
         }
-        while(CheckNum(corrcount_color,out color_integer));
+        while (CheckNum(corrcount_color, out color_integer));
 
-        DataUser.Countcolor = color_integer;
-       
-        NameColors(color_integer);
+        return Convert.ToInt32(corrcount_color);
 
-       // DataOutput(DataUser.Name, DataUser.LastName, DataUser.Age,  DataUser.NamePets, DataUser.Favcolor);
-        
-        Console.WriteLine(DataUser);
-        
     }
-    //Цвета метод
-    static string[] NameColors(int count)
+    //Названия цветов
+    public static string[] EnterColorName(int count)
     {
+        var result = new string[count];
         Console.WriteLine("Введите ваши любимые цвета: ");
-        var result = new string[count];
         for (int i = 0; i < result.Length; i++)
         {
-            Console.Write(i + 1 + ": ");
+            Console.Write(i + 1 + ". ");
             result[i] = Console.ReadLine();
         }
-        Console.WriteLine("Ваши любимые цвета: ");
-        foreach (var color in result)
-        {
-            Console.Write(color + ", ");
-        }
-
         return result;
     }
 
-
-    //Животные метод
-    static string[] NickNamePats(int count)
+    public static string[] EnterColorName2(int count, string[] mass)
     {
-
-        Console.WriteLine("Введите клички ваших питомцев: ");
-        var result = new string[count];
-        for (int i = 0; i < result.Length; i++)
+        
+        
+        for (int i = 0; i < mass.Length; i++)
         {
-            Console.Write(i + 1 + ": ");
-            result[i] = Console.ReadLine();
+            Console.Write(i + 1 + ". ");
+            mass[i] = Console.ReadLine();
         }
-        Console.WriteLine("Клички ваших питомцев: ");
-        foreach (var pets_nik in result)
-        {
-            Console.Write(pets_nik + ", ");
-        }
-        return result;
+        return mass;
     }
-//Проверка на корректность
-    static bool CheckNum(string number, out int corrNumber)
+
+    //Проверка на корректность
+    public static bool CheckNum(string number, out int corrNumber)
     {
         if (int.TryParse(number, out int intNum))
         {
@@ -119,23 +148,38 @@ class Program
             return true;
             CheckNum(number, out corrNumber);
         }
-        
     }
-    static void DataOutput(string name, string lastname, int age,  string[] namepets, string[] favcolor)
+    public static void ShowDataUser(string name, string lastname, int age, bool haspets, int countpets, string[] name_pets, string[] name_color)
     {
-        Console.WriteLine("Ваше имя и фамилия: {0} {1}", name,  lastname);
+        Console.WriteLine("\n\n\n\n\n");
+        Console.WriteLine("Ваше ИФ: {0} {1}", name, lastname);
         Console.WriteLine("Вам {0} лет", age);
-        Console.WriteLine("Ваши питомцы это: ");
+        if (haspets)
+        {
+            Console.WriteLine("У вас {0} питомец(ца), их(его) зовут: ", countpets);
 
-        foreach(var pet in namepets)
-        {
-            Console.WriteLine(pet + " ");
+            for (int i = 0; i < name_pets.Length; i++)
+            {
+                Console.Write(i + 1 + ". ");
+                Console.WriteLine(name_pets[i]);
+            }
         }
-        Console.WriteLine("Ваши любимые цвета: ");
-        foreach(var color in favcolor)
+        else
         {
-            Console.WriteLine(color + " ");
+            Console.WriteLine("У вас нет домашних животных");
         }
-     
+        Console.WriteLine("Ваши любимые цвета: " );
+
+        for (int i = 0; i < name_color.Length; i++)
+        {
+            Console.Write(i + 1 + ". ");
+            Console.WriteLine(name_color[i]);
+        }
+        
+
     }
 }
+
+//int countpets, string[] name_pets,
+// DataUser.PetsCount, DataUser.NamePets,
+
